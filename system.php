@@ -27,6 +27,19 @@ function productSales () {
     system("clear");
 };
 
+function history() {
+    system("clear");
+
+    echo "------------------------------- \n";
+    echo "Histórico de vendas \n";
+    echo "------------------------------- \n";
+    $conteudo = file_get_contents("usuarios.txt");
+    echo nl2br($conteudo);
+    echo "------------------------------- \n";
+    
+    readline("Aperte Enter para voltar ao menu. \n");
+};
+
 function disconnected () {
     global $isLoggedIn;
     global $currentUser;
@@ -86,6 +99,7 @@ function menu ($num) {
         case "2":
             break;
         case "3":
+            history();
             break;
         case "4":
             disconnected();
