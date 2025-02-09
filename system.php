@@ -27,6 +27,16 @@ function productSales () {
     system("clear");
 };
 
+function disconnected () {
+    global $isLoggedIn;
+    global $currentUser;
+
+    $message = "Usuário $currentUser deslogado em:  " . date('d/m/Y H:i:s') . " \n";
+    file_put_contents('usuarios.txt', $message, FILE_APPEND);
+
+    $isLoggedIn = false;
+}
+
 function userValidation ($user, $password) {
     global $isLoggedIn;
     global $dataBase;
@@ -78,6 +88,7 @@ function menu ($num) {
         case "3":
             break;
         case "4":
+            disconnected();
             break;
         case "9":
             file_put_contents("usuarios.txt", "");
