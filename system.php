@@ -13,6 +13,20 @@ function login() {
     userValidation($user, $password);
 }
 
+function productSales () {
+    global $currentUser;
+    
+    system("clear");
+
+    $productName = readline("Nome do Produto: \n");
+    $price = readline("Preço: \n");
+
+    $message = $currentUser . "      Venda (Produto): " . $productName . "    Preço: R$:" . $price . "    ". date('d/m/Y H:i:s') . " \n";
+    file_put_contents('usuarios.txt', $message, FILE_APPEND);
+
+    system("clear");
+};
+
 function userValidation ($user, $password) {
     global $isLoggedIn;
     global $dataBase;
@@ -53,6 +67,26 @@ function validationForLoggedOutUser ($num) {
     };
 };
 
+function menu ($num) {
+
+    switch ($num) {
+        case "1":
+            productSales();
+            break;
+        case "2":
+            break;
+        case "3":
+            break;
+        case "4":
+            break;
+        case "9":
+            system("clear");
+            exit;
+        default:
+            echo "Opção inválida! \n";
+    };
+}
+
 while (true) {
     if($isLoggedIn) {
         echo "------------------------------- \n";
@@ -63,6 +97,7 @@ while (true) {
         echo "9 - Sair \n";
         echo "------------------------------- \n";
         $menuOption = readline("Escolha alguma opção do menu: \n");
+        menu($menuOption);
         system('clear');
     } else {
         echo "------------------------------- \n";
