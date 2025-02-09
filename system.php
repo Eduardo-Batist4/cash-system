@@ -80,6 +80,7 @@ function menu ($num) {
         case "4":
             break;
         case "9":
+            file_put_contents("usuarios.txt", "");
             system("clear");
             exit;
         default:
