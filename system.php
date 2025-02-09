@@ -1,8 +1,50 @@
 <?php
 
+$currentUser;
+
+$isLoggedIn = (bool) false;
+
+$dataBase = [];
+$dataBase["admin"] = '12345';
+
+function login() {
+    $user = readline("User: \n");
+    $password = readline("Senha: \n");
+    userValidation($user, $password);
+}
+
+function userValidation ($user, $password) {
+    global $isLoggedIn;
+    global $dataBase;
+    global $currentUser;
+
+    if (isset($dataBase[$user])) {
+        if($dataBase[$user] == $password) {
+            $currentUser = $user; 
+
+            $message = "Usuário $currentUser logado " . date('d/m/Y H:i:s') . " \n";
+            file_put_contents('usuarios.txt', $message, FILE_APPEND);
+
+            $isLoggedIn = true;
+        } else {
+            system("clear");
+            echo "------------------------------- \n";
+            echo "Senha incorreta! \n";
+            echo "------------------------------- \n";
+            login();
+        }
+    } else {
+        system("clear");
+        echo "------------------------------- \n";
+        echo "Usuario não encontrado! \n";
+        echo "------------------------------- \n";
+        login();
+    }
+}
 
 function validationForLoggedOutUser ($num) {
     if ($num == 1) {
+        login();
         system('clear');
     } else {
         system('clear');
