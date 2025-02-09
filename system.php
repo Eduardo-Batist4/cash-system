@@ -2,10 +2,13 @@
 
 $currentUser;
 
+$totalSales = 0;
+
 $isLoggedIn = (bool) false;
 
 $dataBase = [];
-$dataBase["admin"] = '12345';
+$dataBase["admin"] = '12345'; // Usuário teste;
+
 
 function login() {
     $user = readline("User: \n");
@@ -15,11 +18,14 @@ function login() {
 
 function productSales () {
     global $currentUser;
-    
+    global $totalSales;
+
     system("clear");
 
     $productName = readline("Nome do Produto: \n");
     $price = readline("Preço: \n");
+
+    $totalSales += $price;
 
     $message = $currentUser . "      Venda (Produto): " . $productName . "    Preço: R$:" . $price . "    ". date('d/m/Y H:i:s') . " \n";
     file_put_contents('usuarios.txt', $message, FILE_APPEND);
@@ -36,7 +42,7 @@ function newUser () {
     
     if ($confirmPassword == $password) {
         $dataBase[$name] = $password;
-        $message = "Usuário $name criado em " . date('d/m/Y H:i:s') . " \n";
+        $message = "Usuário $name criado em:   " . date('d/m/Y H:i:s') . " \n";
         file_put_contents('usuarios.txt', $message, FILE_APPEND);
         system("clear");
         
@@ -47,12 +53,15 @@ function newUser () {
 
 function history() {
     system("clear");
+    global $totalSales;
 
     echo "------------------------------- \n";
     echo "Histórico de vendas \n";
     echo "------------------------------- \n";
     $conteudo = file_get_contents("usuarios.txt");
     echo nl2br($conteudo);
+    echo "------------------------------- \n";
+    echo "Total de vendas: R$:$totalSales \n";
     echo "------------------------------- \n";
     
     readline("Aperte Enter para voltar ao menu. \n");
@@ -62,7 +71,7 @@ function disconnected () {
     global $isLoggedIn;
     global $currentUser;
 
-    $message = "Usuário $currentUser deslogado em:  " . date('d/m/Y H:i:s') . " \n";
+    $message = "Usuário $currentUser deslogado em:   " . date('d/m/Y H:i:s') . " \n";
     file_put_contents('usuarios.txt', $message, FILE_APPEND);
 
     $isLoggedIn = false;
@@ -77,7 +86,7 @@ function userValidation ($user, $password) {
         if($dataBase[$user] == $password) {
             $currentUser = $user; 
 
-            $message = "Usuário $currentUser logado " . date('d/m/Y H:i:s') . " \n";
+            $message = "Usuário $currentUser logado em:   " . date('d/m/Y H:i:s') . " \n";
             file_put_contents('usuarios.txt', $message, FILE_APPEND);
 
             $isLoggedIn = true;
