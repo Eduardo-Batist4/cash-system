@@ -35,6 +35,8 @@ function productSales () {
 
 function newUser () {
     global $dataBase;
+
+    system("clear");
     
     $name = readline("Name: \n");
     $password = readline("Senha: \n");
@@ -47,7 +49,12 @@ function newUser () {
         system("clear");
         
     } else {
+        echo "------------------------------- \n";
         echo "Senhas não coincidem! \n";
+        echo "------------------------------- \n";
+        readline("Aperte Enter para criar um conta! \n");
+        system("clear");
+        newUser();
     };
 };
 
