@@ -27,6 +27,24 @@ function productSales () {
     system("clear");
 };
 
+function newUser () {
+    global $dataBase;
+    
+    $name = readline("Name: \n");
+    $password = readline("Senha: \n");
+    $confirmPassword = readline("Confirmar Senha: \n");
+    
+    if ($confirmPassword == $password) {
+        $dataBase[$name] = $password;
+        $message = "Usuário $name criado em " . date('d/m/Y H:i:s') . " \n";
+        file_put_contents('usuarios.txt', $message, FILE_APPEND);
+        system("clear");
+        
+    } else {
+        echo "Senhas não coincidem! \n";
+    };
+};
+
 function history() {
     system("clear");
 
@@ -97,6 +115,7 @@ function menu ($num) {
             productSales();
             break;
         case "2":
+            newUser();
             break;
         case "3":
             history();
