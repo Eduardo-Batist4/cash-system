@@ -39,6 +39,22 @@ function registerProduct () {
     system("clear");
 }
 
+function productsAvailable () {
+    global $dataBaseProduct;
+
+    system("clear");
+    echo "------------------------------- \n";
+    echo "Produto Disponíveis! \n";
+    echo "------------------------------- \n";
+    foreach ($dataBaseProduct as &$item) {
+        echo "ID: " . $item["id"] . "   Name: " . $item["name"] . "   Preço: " . $item["price"] . "   Estoque: " . $item["stock"] . " \n";
+    };
+    echo "------------------------------- \n";
+
+    readline("Aperte Enter para voltar ao menu! \n");
+    system("clear");
+};
+
 function checkStock ($id) {
     global $dataBaseProduct;
     global $currentUser;
@@ -64,9 +80,6 @@ function checkStock ($id) {
     readline("Aperte Enter para voltar ao menu! \n");   
     system("clear");
 };
-
-
-
 
 function productSales () {
     system("clear");
@@ -179,9 +192,12 @@ function menu ($num) {
             registerProduct();
             break;
         case "4":
-            history();
+            productsAvailable();
             break;
         case "5":
+            history();
+            break;
+        case "6":
             disconnected();
             break;
         case "9":
@@ -199,8 +215,9 @@ while (true) {
         echo "1 - Vender \n";
         echo "2 - Novo Usuário \n";
         echo "3 - Cadastrar Produto \n";
-        echo "4 - Verificar Log \n";
-        echo "5 - Deslogar \n";
+        echo "4 - Produtos Disponíveis \n";
+        echo "5 - Verificar Log \n";
+        echo "6 - Deslogar \n";
         echo "9 - Sair \n";
         echo "------------------------------- \n";
         $menuOption = readline("Escolha alguma opção do menu: \n");
