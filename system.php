@@ -9,6 +9,7 @@ $isLoggedIn = (bool) false;
 $dataBase = [];
 $dataBase["admin"] = '12345'; // Usuário teste;
 
+$dataBaseProduct = [];
 
 function login() {
     $user = readline("User: \n");
@@ -16,21 +17,63 @@ function login() {
     userValidation($user, $password);
 }
 
-function productSales () {
+function registerProduct () {
     global $currentUser;
-    global $totalSales;
+    global $dataBaseProduct;
 
-    system("clear");
-
+    $productID = readline("ID: \n");
     $productName = readline("Nome do Produto: \n");
     $price = readline("Preço: \n");
+    $stock = readline("Estoque: \n");
 
-    $totalSales += $price;
+    $dataBaseProduct[] = ["id" => $productID, "name" => $productName, "price" => $price, "stock" => $stock];
 
-    $message = $currentUser . "      Venda (Produto): " . $productName . "    Preço: R$:" . $price . "    ". date('d/m/Y H:i:s') . " \n";
+    $message = "($currentUser)  CADASTRO DE PRODUTO      ID: $productID      Name: $productName      Preço: $price      Estoque: $stock      " . date('d/m/Y H:i:s') . " \n";
     file_put_contents('usuarios.txt', $message, FILE_APPEND);
 
     system("clear");
+    echo "------------------------------- \n";
+    echo "Produto cadastrado com sucesso! \n";
+    echo "------------------------------- \n";
+    readline("Aperte Enter para voltar ao menu! \n");
+    system("clear");
+}
+
+function checkStock ($id) {
+    global $dataBaseProduct;
+    global $currentUser;
+    global $totalSales;
+
+    foreach ($dataBaseProduct as &$item) {
+        if ($item["id"] ==  $id) {
+            if ($item["stock"] >= 1) {
+                $item["stock"] = $item["stock"] - 1;
+
+                $totalSales += $item["price"];
+
+                $message = "($currentUser)  VENDA      " . "ID: " . $item["id"] . "   Nome: " . $item["name"] . "   Preço: " . $item["price"] . "   Estoque: " . $item["stock"] . "      " . date('d/m/Y H:i:s') . " \n";
+                file_put_contents('usuarios.txt', $message, FILE_APPEND);
+                return;
+            };
+        };
+    };
+    system("clear");
+    echo "------------------------------- \n";
+    echo "Produto em falta no estoque! \n";
+    echo "------------------------------- \n";        
+    readline("Aperte Enter para voltar ao menu! \n");   
+    system("clear");
+};
+
+
+
+
+function productSales () {
+    system("clear");
+
+    $idProduct = readline("ID do produto: ");
+
+    checkStock($idProduct);
 };
 
 function newUser () {
@@ -68,7 +111,7 @@ function history() {
     $conteudo = file_get_contents("usuarios.txt");
     echo nl2br($conteudo);
     echo "------------------------------- \n";
-    echo "Total de vendas: R$:$totalSales \n";
+    echo "Total de vendas: R$:" . number_format($totalSales, 2) . "\n";
     echo "------------------------------- \n";
     
     readline("Aperte Enter para voltar ao menu. \n");
@@ -125,7 +168,6 @@ function validationForLoggedOutUser ($num) {
 };
 
 function menu ($num) {
-
     switch ($num) {
         case "1":
             productSales();
@@ -134,9 +176,12 @@ function menu ($num) {
             newUser();
             break;
         case "3":
-            history();
+            registerProduct();
             break;
         case "4":
+            history();
+            break;
+        case "5":
             disconnected();
             break;
         case "9":
@@ -153,8 +198,9 @@ while (true) {
         echo "------------------------------- \n";
         echo "1 - Vender \n";
         echo "2 - Novo Usuário \n";
-        echo "3 - Verificar Log \n";
-        echo "4 - Deslogar \n";
+        echo "3 - Cadastrar Produto \n";
+        echo "4 - Verificar Log \n";
+        echo "5 - Deslogar \n";
         echo "9 - Sair \n";
         echo "------------------------------- \n";
         $menuOption = readline("Escolha alguma opção do menu: \n");
