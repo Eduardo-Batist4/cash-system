@@ -1,21 +1,56 @@
 <?php
 
-$currentUser;
+$currentUser; // Salvar nome do usuario logado
 
 $totalSales = 0;
 
-$isLoggedIn = (bool) false;
+$isLoggedIn = (bool) false; 
 
-$dataBase = [];
+$dataBase = []; // Armazenamento Usuarios
 $dataBase["admin"] = '12345'; // Usuário teste;
 
-$dataBaseProduct = [];
+$dataBaseProduct = []; // Armazenamento Produtos
+
+// ----------- Menu Functions --------- //
 
 function login() {
     $user = readline("User: \n");
     $password = readline("Senha: \n");
     userValidation($user, $password);
 }
+
+function productSales () {
+    system("clear");
+
+    $idProduct = readline("ID do produto: ");
+
+    checkStock($idProduct);
+};
+
+function newUser () {
+    global $dataBase;
+
+    system("clear");
+    
+    $name = readline("Name: \n");
+    $password = readline("Senha: \n");
+    $confirmPassword = readline("Confirmar Senha: \n");
+    
+    if ($confirmPassword == $password) {
+        $dataBase[$name] = $password;
+        $message = "Usuário $name criado em:   " . date('d/m/Y H:i:s') . " \n";
+        file_put_contents('usuarios.txt', $message, FILE_APPEND);
+        system("clear");
+        
+    } else {
+        echo "------------------------------- \n";
+        echo "Senhas não coincidem! \n";
+        echo "------------------------------- \n";
+        readline("Aperte Enter para criar um conta! \n");
+        system("clear");
+        newUser();
+    };
+};
 
 function registerProduct () {
     global $currentUser;
@@ -55,65 +90,6 @@ function productsAvailable () {
     system("clear");
 };
 
-function checkStock ($id) {
-    global $dataBaseProduct;
-    global $currentUser;
-    global $totalSales;
-
-    foreach ($dataBaseProduct as &$item) {
-        if ($item["id"] ==  $id) {
-            if ($item["stock"] >= 1) {
-                $item["stock"] = $item["stock"] - 1;
-
-                $totalSales += $item["price"];
-
-                $message = "($currentUser)  VENDA      " . "ID: " . $item["id"] . "   Nome: " . $item["name"] . "   Preço: " . $item["price"] . "   Estoque: " . $item["stock"] . "      " . date('d/m/Y H:i:s') . " \n";
-                file_put_contents('usuarios.txt', $message, FILE_APPEND);
-                return;
-            };
-        };
-    };
-    system("clear");
-    echo "------------------------------- \n";
-    echo "Produto em falta no estoque! \n";
-    echo "------------------------------- \n";        
-    readline("Aperte Enter para voltar ao menu! \n");   
-    system("clear");
-};
-
-function productSales () {
-    system("clear");
-
-    $idProduct = readline("ID do produto: ");
-
-    checkStock($idProduct);
-};
-
-function newUser () {
-    global $dataBase;
-
-    system("clear");
-    
-    $name = readline("Name: \n");
-    $password = readline("Senha: \n");
-    $confirmPassword = readline("Confirmar Senha: \n");
-    
-    if ($confirmPassword == $password) {
-        $dataBase[$name] = $password;
-        $message = "Usuário $name criado em:   " . date('d/m/Y H:i:s') . " \n";
-        file_put_contents('usuarios.txt', $message, FILE_APPEND);
-        system("clear");
-        
-    } else {
-        echo "------------------------------- \n";
-        echo "Senhas não coincidem! \n";
-        echo "------------------------------- \n";
-        readline("Aperte Enter para criar um conta! \n");
-        system("clear");
-        newUser();
-    };
-};
-
 function history() {
     system("clear");
     global $totalSales;
@@ -139,6 +115,36 @@ function disconnected () {
 
     $isLoggedIn = false;
 }
+
+// ------------------------------------ //
+
+// ------------ Validation ------------ //
+
+function checkStock ($id) {
+    global $dataBaseProduct;
+    global $currentUser;
+    global $totalSales;
+
+    foreach ($dataBaseProduct as &$item) {
+        if ($item["id"] ==  $id) {
+            if ($item["stock"] >= 1) {
+                $item["stock"] = $item["stock"] - 1;
+
+                $totalSales += $item["price"];
+
+                $message = "($currentUser)  VENDA      " . "ID: " . $item["id"] . "   Nome: " . $item["name"] . "   Preço: " . $item["price"] . "   Estoque: " . $item["stock"] . "      " . date('d/m/Y H:i:s') . " \n";
+                file_put_contents('usuarios.txt', $message, FILE_APPEND);
+                return;
+            };
+        };
+    };
+    system("clear");
+    echo "------------------------------- \n";
+    echo "Produto em falta no estoque! \n";
+    echo "------------------------------- \n";        
+    readline("Aperte Enter para voltar ao menu! \n");   
+    system("clear");
+};
 
 function userValidation ($user, $password) {
     global $isLoggedIn;
@@ -179,6 +185,10 @@ function validationForLoggedOutUser ($num) {
         echo "Opção inválida! \n";
     };
 };
+
+// ----------------------------------- //
+
+// -------------- Menu --------------- //
 
 function menu ($num) {
     switch ($num) {
