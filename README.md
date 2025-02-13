@@ -19,7 +19,7 @@ Este projeto de gerenciamento de caixa foi desenvolvido durante o curso da Code 
 Clone o projeto
 
 ```bash
-  git clone https://link-para-o-projeto
+  git clone https://github.com/Eduardo-Batist4/cash-system.git
 ```
 
 Entre no diretório do projeto
